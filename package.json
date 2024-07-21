@@ -1,6 +1,6 @@
 {
   "name": "npdp-create-app",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "CLI tool for creating new Next.js app boilerplates",
   "main": "dist/index.js",
   "bin": {

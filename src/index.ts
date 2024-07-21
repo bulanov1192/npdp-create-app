@@ -109,7 +109,7 @@ DB_PORT=${dbPort}
 APP_PORT=${appPort}
 DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
 `;
-    fs.writeFileSync(path.join(appPath, ".env"), envContent);
+    fs.writeFileSync(path.join(appPath, ".env.local"), envContent);
 
     // Step 11: Run docker-compose up
     console.log("Starting Docker containers...");
