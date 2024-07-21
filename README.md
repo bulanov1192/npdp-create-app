@@ -65,6 +65,7 @@ myapp
 ├── package.json
 ├── package.lock.json
 ├── .env.example
+├── .env.local
 ├── .eslintrc.json
 ├── .gitignore
 ├── README.md
