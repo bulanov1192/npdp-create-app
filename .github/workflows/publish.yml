@@ -1,45 +1,21 @@
 name: Publish to NPM
-
 on:
-  push:
-    branches:
-      - main
-
-jobs:
   release:
+    types: [created]
+jobs:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          registry-url: "https://registry.npmjs.org/"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install standard-version
-        run: npm install --save-dev standard-version
-
-      - name: Lint and Test
-        run: npm test
-
-      - name: Bump version and push tag
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          npx standard-version --release-as patch
-          git push --follow-tags https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/bulanov1192/npdp-create-app.git HEAD:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to NPM
+          node-version: "14.x"
+          registry-url: "https://registry.npmjs.org"
+      - name: Install dependencies and build 🔧
+        run: npm ci && npm run build
+      - name: Publish package on NPM 📦
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
