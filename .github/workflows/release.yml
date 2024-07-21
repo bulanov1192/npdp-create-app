@@ -16,22 +16,31 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "18.12"
+          node-version: "19"
 
       - name: Install dependencies
         run: npm install
+
+      - name: Set git user
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Bump version and create changelog
         run: npx standard-version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug - Show current git config
+        run: git config --list
+
+      - name: Debug - Show current remote URL
+        run: git remote -v
+
       - name: Push changes and tags
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push --follow-tags
+          git push --follow-tags origin HEAD:main
 
       - name: Publish to NPM
         run: npm publish
