@@ -109,7 +109,7 @@ DB_PORT=${dbPort}
 APP_PORT=${appPort}
 DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
 `;
-    fs.writeFileSync(path.join(appPath, ".env.local"), envContent);
+    fs.writeFileSync(path.join(appPath, ".env"), envContent);
 
     // Step 11: Run docker-compose up
     console.log("Starting Docker containers...");
@@ -149,7 +149,7 @@ DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
     }
 
     // Step 13: Ensure DATABASE_URL is correctly set in environment
-    const envPath = path.join(appPath, ".env.local");
+    const envPath = path.join(appPath, ".env");
     const env = fs.readFileSync(envPath, "utf8");
     if (!env.includes("DATABASE_URL")) {
       console.error(
