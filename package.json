@@ -26,12 +26,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/npdp-create-app.git"
+    "url": "https://github.com/bulanov1192/npdp-create-app.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/npdp-create-app/issues"
+    "url": "https://github.com/bulanov1192/npdp-create-app/issues"
   },
-  "homepage": "https://github.com/yourusername/npdp-create-app#readme",
+  "homepage": "https://github.com/bulanov1192/npdp-create-app#readme",
   "author": "Vladlanov",
   "license": "MIT"
 }
