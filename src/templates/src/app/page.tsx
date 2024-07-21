@@ -12,7 +12,7 @@ export default async function Home() {
       const newUser = await prisma.user.create({
         data: {
           email: "john.doe@example.com",
-          name: "John Doe",
+          password: "password",
         },
       });
       revalidatePath("/"); // Revalidate the path to fetch the updated list of users
