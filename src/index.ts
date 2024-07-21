@@ -50,7 +50,7 @@ program
     console.log("Copying template files...");
     try {
       fs.copySync(path.join(__dirname, "templates"), appPath);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error copying template files:", error);
       process.exit(1);
     }
@@ -108,17 +108,14 @@ DATABASE_URL=postgresql://${dbUser}:${dbPassword}@localhost:${dbPort}/${dbName}
 `;
     fs.writeFileSync(path.join(appPath, ".env"), envContent);
 
-    console.log(
-      "Dependencies installed and files copied. Your project is ready to be set up with Docker."
-    );
+    // Step 11: Run docker-compose up -d --build
+    console.log("Starting Docker containers...");
+    execSync("docker-compose up -d --build", {
+      cwd: appPath,
+      stdio: "inherit",
+    });
 
-    // Inform the user to manually run Docker Compose and apply Prisma schema
-    console.log("Next steps:");
-    console.log(`1. Navigate to the project directory: cd ${output}`);
-    console.log("2. Start Docker containers: docker-compose up -d --build");
-    console.log(
-      "3. Apply Prisma schema to the database: npx prisma migrate dev --name init"
-    );
+    console.log("Docker containers are up and running.");
 
     console.log("All done! Your project is ready.");
   });
