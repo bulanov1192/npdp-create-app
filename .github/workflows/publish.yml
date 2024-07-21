@@ -31,7 +31,8 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           npx standard-version --release-as patch
-          git push --follow-tags
+          git remote set-url origin https://github.com/${{ github.repository }}.git
+          git push --follow-tags https://$GITHUB_ACTOR:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
