@@ -1,0 +1,29 @@
+{
+  "name": "npdp-create-app",
+  "version": "1.0.12",
+  "description": "CLI tool for creating new Next.js app boilerplates",
+  "main": "dist/index.js",
+  "bin": {
+    "npdp-create-app": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && cp -r src/templates dist/",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "commander": "^8.0.0",
+    "fs-extra": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^16.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "templates/**/*"
+  ],
+  "author": "Vladlanov",
+  "license": "MIT"
+}
