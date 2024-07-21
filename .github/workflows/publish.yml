@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -22,18 +24,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install standard-version
+        run: npm install --save-dev standard-version
+
       - name: Lint and Test
         run: npm test
 
       - name: Bump version and push tag
-        id: version
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           npx standard-version --release-as patch
-          git tag | grep $(node -p "require('./package.json').version")
-          git remote set-url origin https://$GITHUB_ACTOR:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
-          git push --follow-tags origin main
+          git push --follow-tags https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/bulanov1192/npdp-create-app.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
