@@ -113,7 +113,10 @@ DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
 
     // Step 11: Run docker-compose up
     console.log("Starting Docker containers...");
-    execSync("docker-compose up -d", { cwd: appPath, stdio: "inherit" });
+    execSync("docker-compose up -d --build", {
+      cwd: appPath,
+      stdio: "inherit",
+    });
 
     // Step 12: Wait for the database to be ready
     console.log("Waiting for the database to be ready...");
@@ -145,9 +148,24 @@ DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
       process.exit(1);
     }
 
-    // Step 13: Apply Prisma schema to the database
+    // Step 13: Ensure DATABASE_URL is correctly set in environment
+    const envPath = path.join(appPath, ".env.local");
+    const env = fs.readFileSync(envPath, "utf8");
+    if (!env.includes("DATABASE_URL")) {
+      console.error(
+        "DATABASE_URL is not set in .env file. Please check the .env file."
+      );
+      process.exit(1);
+    }
+
+    // Step 14: Apply Prisma schema to the database
     console.log("Applying Prisma schema to the database...");
-    execSync("npx prisma migrate deploy", { cwd: appPath, stdio: "inherit" });
+    try {
+      execSync("npx prisma db push", { cwd: appPath, stdio: "inherit" });
+    } catch (error) {
+      console.error("Error applying Prisma schema to the database:", error);
+      process.exit(1);
+    }
 
     console.log(
       "All done! Your project is ready and the database schema has been applied."
