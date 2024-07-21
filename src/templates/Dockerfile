@@ -1,6 +1,9 @@
 # Use the official lightweight Node.js image.
 FROM node:19-alpine
 
+# Install bash
+RUN apk add --no-cache bash
+
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
@@ -13,11 +16,12 @@ RUN npm install
 # Copy local code to the container image.
 COPY . .
 
-# Build the application.
-RUN npm run build
+# Copy wait-for-it script
+COPY wait-for-it.sh /usr/src/app/wait-for-it.sh
+RUN chmod +x /usr/src/app/wait-for-it.sh
 
 # Expose the port on which the app runs.
-EXPOSE 3000
+EXPOSE ${APP_PORT}
 
 # Run the web service on container startup.
-CMD [ "npm", "start" ]
+CMD ["./wait-for-it.sh", "db:5432", "--", "sh", "-c", "npx prisma db push && npm run build && npm start"]

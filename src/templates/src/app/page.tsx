@@ -11,7 +11,7 @@ export default async function Home() {
     try {
       const newUser = await prisma.user.create({
         data: {
-          email: "john.doe@example.com",
+          email: Date.now() + "john.doe@example.com",
           password: "password",
         },
       });

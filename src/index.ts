@@ -8,9 +8,6 @@ import path from "path";
 // Dynamically load the version from package.json
 const packageJson = fs.readJsonSync(path.join(__dirname, "../package.json"));
 
-// Utility function to sleep for a specified time
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const program = new Command();
 
 program
@@ -71,7 +68,7 @@ program
         lint: "next lint",
       };
       fs.writeJsonSync(packageJsonPath, appPackageJson, { spaces: 2 });
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error reading or writing package.json:", err);
       process.exit(1);
     }
@@ -107,81 +104,23 @@ DB_USER=${dbUser}
 DB_PASSWORD=${dbPassword}
 DB_PORT=${dbPort}
 APP_PORT=${appPort}
-DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
+DATABASE_URL=postgresql://${dbUser}:${dbPassword}@localhost:${dbPort}/${dbName}
 `;
     fs.writeFileSync(path.join(appPath, ".env"), envContent);
 
-    // Step 11: Run docker-compose up
-    console.log("Starting Docker containers...");
-    execSync("docker-compose up -d --build", {
-      cwd: appPath,
-      stdio: "inherit",
-    });
-
-    // Step 12: Wait for the database to be ready
-    console.log("Waiting for the database to be ready...");
-    let dbReady = false;
-    const maxRetries = 20;
-    let retries = 0;
-
-    while (!dbReady && retries < maxRetries) {
-      try {
-        await sleep(5000); // Wait for 5 seconds
-        execSync(`pg_isready -h localhost -p ${dbPort} -U ${dbUser}`, {
-          cwd: appPath,
-          stdio: "inherit",
-        });
-        dbReady = true;
-        console.log("Database is ready.");
-      } catch (error) {
-        retries += 1;
-        console.log(
-          `Retrying to connect to the database (${retries}/${maxRetries})...`
-        );
-      }
-    }
-
-    if (!dbReady) {
-      console.error(
-        "Failed to connect to the database. Please check the Docker container logs for more information."
-      );
-      process.exit(1);
-    }
-
-    // Step 13: Ensure DATABASE_URL is correctly set in environment
-    const envPath = path.join(appPath, ".env");
-    const env = fs.readFileSync(envPath, "utf8");
-    if (!env.includes("DATABASE_URL")) {
-      console.error(
-        "DATABASE_URL is not set in .env file. Please check the .env file."
-      );
-      process.exit(1);
-    }
-
-    // Step 14: Apply Prisma schema to the database and generate client
     console.log(
-      "Applying Prisma schema to the database and generating Prisma client..."
+      "Dependencies installed and files copied. Your project is ready to be set up with Docker."
     );
-    try {
-      execSync("docker-compose exec app npx prisma db push", {
-        cwd: appPath,
-        stdio: "inherit",
-      });
-      execSync("docker-compose exec app npx prisma generate", {
-        cwd: appPath,
-        stdio: "inherit",
-      });
-    } catch (error) {
-      console.error(
-        "Error applying Prisma schema to the database and generating Prisma client:",
-        error
-      );
-      process.exit(1);
-    }
 
+    // Inform the user to manually run Docker Compose and apply Prisma schema
+    console.log("Next steps:");
+    console.log(`1. Navigate to the project directory: cd ${output}`);
+    console.log("2. Start Docker containers: docker-compose up -d --build");
     console.log(
-      "All done! Your project is ready and the database schema has been applied."
+      "3. Apply Prisma schema to the database: npx prisma migrate dev --name init"
     );
+
+    console.log("All done! Your project is ready.");
   });
 
 program.parse(process.argv);
