@@ -24,6 +24,14 @@
     "dist/**/*",
     "templates/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/npdp-create-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/npdp-create-app/issues"
+  },
+  "homepage": "https://github.com/yourusername/npdp-create-app#readme",
   "author": "Vladlanov",
   "license": "MIT"
 }
