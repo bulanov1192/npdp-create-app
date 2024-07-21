@@ -32,7 +32,7 @@ export default async function Home() {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            {user.id}: {user.email} - {user.name}
+            {user.id}: {user.email}
           </li>
         ))}
       </ul>
