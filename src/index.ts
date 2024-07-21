@@ -161,7 +161,10 @@ DATABASE_URL=postgresql://${dbUser}:${dbPassword}@db:${dbPort}/${dbName}
     // Step 14: Apply Prisma schema to the database
     console.log("Applying Prisma schema to the database...");
     try {
-      execSync("npx prisma db push", { cwd: appPath, stdio: "inherit" });
+      execSync("docker-compose exec app npx prisma db push", {
+        cwd: appPath,
+        stdio: "inherit",
+      });
     } catch (error) {
       console.error("Error applying Prisma schema to the database:", error);
       process.exit(1);
